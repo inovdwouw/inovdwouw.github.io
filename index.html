@@ -196,6 +196,11 @@
     border-radius:3px;
     padding:2px 6px;
   }
+  .pinned-tag{
+    color:var(--accent);
+    border-color:var(--accent);
+    background:var(--accent-dim);
+  }
 
   .repo-desc{
     font-size:14.5px;
@@ -316,6 +321,7 @@
   <div class="controls">
     <input type="text" id="search" placeholder="filter by name, language, or topic…" autocomplete="off">
     <select id="sortSelect">
+      <option value="pinned" selected>Pinned first</option>
       <option value="updated">Recently updated</option>
       <option value="stars">Most stars</option>
       <option value="name">Name (A–Z)</option>
@@ -336,6 +342,17 @@
 
 <script>
 const USERNAME = "IkNOw57";
+
+// Repos pinned on the GitHub profile, in pinned order (GitHub's REST API
+// doesn't expose pin status, so this is set manually — update if you
+// change your pinned repos).
+const PINNED_ORDER = [
+  "Sample-Efficient-Language-Modelling",
+  "Machine-Learning-for-Named-Entity-Recognition-and-Classification"
+];
+
+// The repo that hosts this very page — excluded from the listing.
+const SELF_HOSTING_REPO = `${USERNAME}.github.io`.toLowerCase();
 
 const LANG_COLORS = {
   "Python": "#3572A5", "Jupyter Notebook": "#DA5B0B", "JavaScript": "#f1e05a",
@@ -378,6 +395,15 @@ function render(){
   });
 
   repos = repos.slice().sort((a,b) => {
+    if (sortBy === "pinned"){
+      const ai = PINNED_ORDER.indexOf(a.name);
+      const bi = PINNED_ORDER.indexOf(b.name);
+      const aPinned = ai !== -1, bPinned = bi !== -1;
+      if (aPinned && bPinned) return ai - bi;
+      if (aPinned) return -1;
+      if (bPinned) return 1;
+      return new Date(b.pushed_at) - new Date(a.pushed_at); // unpinned: most recent next
+    }
     if (sortBy === "stars") return b.stargazers_count - a.stargazers_count;
     if (sortBy === "name") return a.name.localeCompare(b.name);
     if (sortBy === "created") return new Date(b.created_at) - new Date(a.created_at);
@@ -386,6 +412,7 @@ function render(){
 
   document.getElementById('repoCount').textContent = ` — ${repos.length}`;
   document.getElementById('sortedByLabel').textContent =
+    sortBy === "pinned" ? "sorted by pinned" :
     sortBy === "stars" ? "sorted by stars" :
     sortBy === "name" ? "sorted alphabetically" :
     sortBy === "created" ? "sorted by created" : "sorted by updated";
@@ -411,6 +438,7 @@ function render(){
         <div class="repo-body">
           <div class="repo-title-row">
             <a class="repo-title" href="${r.html_url}" target="_blank" rel="noopener">${r.name} <span class="arrow">↗</span></a>
+            ${PINNED_ORDER.includes(r.name) ? '<span class="fork-tag pinned-tag">pinned</span>' : ''}
             ${r.fork ? '<span class="fork-tag">fork</span>' : ''}
           </div>
           <p class="repo-desc">${escapeHtml(desc)}</p>
@@ -441,7 +469,7 @@ async function init(){
     const res = await fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`);
     if (!res.ok) throw new Error(`GitHub API responded ${res.status}`);
     const data = await res.json();
-    allRepos = data.filter(r => !r.archived);
+    allRepos = data.filter(r => !r.archived && r.name.toLowerCase() !== SELF_HOSTING_REPO);
     document.getElementById('lastFetched').textContent = `↳ ${allRepos.length} public repos`;
     document.getElementById('genTime').textContent = `loaded ${new Date().toLocaleString()}`;
     render();
