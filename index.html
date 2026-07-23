@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ino van de Wouw — Repository Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:      #F1F2ED;
+    --paper-dim:  #E7E8E1;
+    --ink:        #1C2230;
+    --ink-soft:   #5B6270;
+    --rule:       #C9CBC0;
+    --accent:     #4C5FD1;   /* embedding-space indigo */
+    --accent-dim: #DDE0F7;
+    --accent2:    #1F8C82;   /* loss-curve teal, secondary */
+    --paper-raise:#FAFAF7;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:0 28px 120px;
+  }
+
+  /* ---------- Header / abstract ---------- */
+  header{
+    padding:88px 0 44px;
+    border-bottom:1px solid var(--rule);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px;height:7px;
+    background:var(--accent);
+    display:inline-block;
+    border-radius:1px;
+  }
+  h1{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:clamp(34px, 5.4vw, 50px);
+    line-height:1.08;
+    margin:0 0 18px;
+    letter-spacing:-0.01em;
+  }
+  .abstract{
+    font-size:16.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+    max-width:58ch;
+    margin:0 0 26px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 22px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .meta-row a{
+    color:var(--ink);
+    text-decoration:none;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:1px;
+    transition:border-color .15s, color .15s;
+  }
+  .meta-row a:hover{ color:var(--accent); border-color:var(--accent); }
+
+  /* ---------- Section label ---------- */
+  .section-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:52px 0 6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .section-label span.count{ color:var(--accent); }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    display:flex;
+    gap:10px;
+    margin:18px 0 8px;
+    flex-wrap:wrap;
+  }
+  .controls input[type="text"]{
+    flex:1;
+    min-width:160px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    background:var(--paper-raise);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:9px 12px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s;
+  }
+  .controls input[type="text"]:focus{ border-color:var(--accent); }
+  .controls select{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    background:var(--paper-raise);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:9px 12px;
+    color:var(--ink);
+    outline:none;
+    cursor:pointer;
+  }
+  .controls select:focus{ border-color:var(--accent); }
+
+  /* ---------- Repo list (annotated-bibliography style) ---------- */
+  .repo-list{
+    list-style:none;
+    margin:18px 0 0;
+    padding:0;
+  }
+  .repo{
+    padding:26px 0;
+    border-bottom:1px solid var(--rule);
+    display:grid;
+    grid-template-columns:44px 1fr;
+    gap:4px 18px;
+  }
+  .repo:first-child{ padding-top:8px; }
+
+  .repo-index{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    padding-top:3px;
+  }
+
+  .repo-body{ min-width:0; }
+
+  .repo-title-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .repo-title{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:19px;
+    color:var(--ink);
+    text-decoration:none;
+    letter-spacing:-0.005em;
+  }
+  .repo-title:hover{ color:var(--accent); }
+  .repo-title:hover .arrow{ transform:translate(2px,-2px); opacity:1; }
+  .arrow{
+    display:inline-block;
+    transition:transform .15s, opacity .15s;
+    opacity:0.45;
+  }
+
+  .fork-tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:2px 6px;
+  }
+
+  .repo-desc{
+    font-size:14.5px;
+    line-height:1.58;
+    color:var(--ink-soft);
+    margin:8px 0 14px;
+    max-width:62ch;
+  }
+
+  .stat-strip{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .stat{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .lang-dot{
+    width:9px;height:9px;
+    border-radius:50%;
+    display:inline-block;
+    flex-shrink:0;
+  }
+  .topics{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+  .topic-pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    background:var(--accent-dim);
+    color:var(--accent);
+    padding:3px 8px;
+    border-radius:3px;
+    letter-spacing:0.01em;
+  }
+
+  /* activity bar: relative recency indicator */
+  .activity-bar{
+    height:3px;
+    background:var(--paper-dim);
+    border-radius:2px;
+    margin-top:14px;
+    overflow:hidden;
+  }
+  .activity-fill{
+    height:100%;
+    background:var(--accent2);
+    border-radius:2px;
+  }
+
+  /* ---------- States ---------- */
+  .state-msg{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    padding:60px 0;
+    text-align:center;
+  }
+  .state-msg.error{ color:#B34438; }
+
+  footer{
+    margin-top:70px;
+    padding-top:24px;
+    border-top:1px solid var(--rule);
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  footer a{ color:var(--ink-soft); }
+
+  @media (max-width:520px){
+    header{ padding:56px 0 34px; }
+    .repo{ grid-template-columns:1fr; }
+    .repo-index{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * { transition:none !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">github.com/IkNOw57</div>
+    <h1>Ino van de Wouw</h1>
+    <p class="abstract">
+      A running index of public repositories — language modelling, NLP, and
+      applied machine learning work, pulled live from GitHub.
+    </p>
+    <div class="meta-row">
+      <a href="https://github.com/IkNOw57" target="_blank" rel="noopener">↳ github profile</a>
+      <a href="https://www.linkedin.com/in/inovandewouw/" target="_blank" rel="noopener">↳ linkedin</a>
+      <span id="lastFetched"></span>
+    </div>
+  </header>
+
+  <div class="section-label">
+    <span>Repositories<span class="count" id="repoCount"></span></span>
+    <span id="sortedByLabel">sorted by updated</span>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="filter by name, language, or topic…" autocomplete="off">
+    <select id="sortSelect">
+      <option value="updated">Recently updated</option>
+      <option value="stars">Most stars</option>
+      <option value="name">Name (A–Z)</option>
+      <option value="created">Newest</option>
+    </select>
+  </div>
+
+  <div id="content">
+    <div class="state-msg" id="loading">fetching repositories…</div>
+  </div>
+
+  <footer>
+    <span>rendered client-side via the GitHub REST API</span>
+    <span id="genTime"></span>
+  </footer>
+
+</div>
+
+<script>
+const USERNAME = "IkNOw57";
+
+const LANG_COLORS = {
+  "Python": "#3572A5", "Jupyter Notebook": "#DA5B0B", "JavaScript": "#f1e05a",
+  "TypeScript": "#3178c6", "HTML": "#e34c26", "CSS": "#563d7c", "Java": "#b07219",
+  "C++": "#f34b7d", "C": "#555555", "Go": "#00ADD8", "Rust": "#dea584",
+  "Shell": "#89e051", "R": "#198CE7", "Julia": "#a270ba", "TeX": "#3D6117"
+};
+function langColor(l){ return LANG_COLORS[l] || "#8A8F98"; }
+
+function timeAgo(dateStr){
+  const d = new Date(dateStr);
+  const diffMs = Date.now() - d.getTime();
+  const days = Math.floor(diffMs / 86400000);
+  if (days < 1) return "today";
+  if (days === 1) return "1 day ago";
+  if (days < 30) return days + " days ago";
+  const months = Math.floor(days/30);
+  if (months < 12) return months + (months===1 ? " month ago" : " months ago");
+  const years = Math.floor(months/12);
+  return years + (years===1 ? " year ago" : " years ago");
+}
+
+// recency 0..1 for the activity bar, saturating around ~2 years
+function recencyScore(dateStr){
+  const days = (Date.now() - new Date(dateStr).getTime()) / 86400000;
+  const score = 1 - Math.min(days / 730, 1);
+  return Math.max(score, 0.04);
+}
+
+let allRepos = [];
+
+function render(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const sortBy = document.getElementById('sortSelect').value;
+
+  let repos = allRepos.filter(r => {
+    if (!q) return true;
+    const hay = [r.name, r.description || "", r.language || "", ...(r.topics||[])].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+
+  repos = repos.slice().sort((a,b) => {
+    if (sortBy === "stars") return b.stargazers_count - a.stargazers_count;
+    if (sortBy === "name") return a.name.localeCompare(b.name);
+    if (sortBy === "created") return new Date(b.created_at) - new Date(a.created_at);
+    return new Date(b.pushed_at) - new Date(a.pushed_at);
+  });
+
+  document.getElementById('repoCount').textContent = ` — ${repos.length}`;
+  document.getElementById('sortedByLabel').textContent =
+    sortBy === "stars" ? "sorted by stars" :
+    sortBy === "name" ? "sorted alphabetically" :
+    sortBy === "created" ? "sorted by created" : "sorted by updated";
+
+  const content = document.getElementById('content');
+
+  if (repos.length === 0){
+    content.innerHTML = `<div class="state-msg">no repositories match “${q}”</div>`;
+    return;
+  }
+
+  const items = repos.map((r, i) => {
+    const num = String(i+1).padStart(2,'0');
+    const desc = r.description ? r.description : "No description provided.";
+    const lang = r.language;
+    const stars = r.stargazers_count;
+    const forks = r.forks_count;
+    const topics = (r.topics || []).slice(0,5);
+
+    return `
+      <li class="repo">
+        <div class="repo-index">[${num}]</div>
+        <div class="repo-body">
+          <div class="repo-title-row">
+            <a class="repo-title" href="${r.html_url}" target="_blank" rel="noopener">${r.name} <span class="arrow">↗</span></a>
+            ${r.fork ? '<span class="fork-tag">fork</span>' : ''}
+          </div>
+          <p class="repo-desc">${escapeHtml(desc)}</p>
+          <div class="stat-strip">
+            ${lang ? `<span class="stat"><span class="lang-dot" style="background:${langColor(lang)}"></span>${lang}</span>` : ''}
+            <span class="stat">★ ${stars}</span>
+            <span class="stat">⑂ ${forks}</span>
+            <span class="stat">updated ${timeAgo(r.pushed_at)}</span>
+          </div>
+          ${topics.length ? `<div class="topics">${topics.map(t=>`<span class="topic-pill">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+          <div class="activity-bar"><div class="activity-fill" style="width:${(recencyScore(r.pushed_at)*100).toFixed(0)}%"></div></div>
+        </div>
+      </li>
+    `;
+  }).join('');
+
+  content.innerHTML = `<ul class="repo-list">${items}</ul>`;
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+async function init(){
+  try {
+    const res = await fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`);
+    if (!res.ok) throw new Error(`GitHub API responded ${res.status}`);
+    const data = await res.json();
+    allRepos = data.filter(r => !r.archived);
+    document.getElementById('lastFetched').textContent = `↳ ${allRepos.length} public repos`;
+    document.getElementById('genTime').textContent = `loaded ${new Date().toLocaleString()}`;
+    render();
+  } catch (err){
+    document.getElementById('content').innerHTML =
+      `<div class="state-msg error">could not load repositories — ${escapeHtml(err.message)}. GitHub's API rate-limits unauthenticated requests; try refreshing in a minute.</div>`;
+  }
+}
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('sortSelect').addEventListener('change', render);
+
+init();
+</script>
+
+</body>
+</html>
