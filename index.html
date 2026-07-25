@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
 <style>
   :root{
     --paper:      #F1F2ED;
@@ -186,6 +190,23 @@
     opacity:0.45;
   }
 
+  .ext-link{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    border:1px solid var(--rule);
+    border-radius:3px;
+    width:22px;
+    height:22px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:color .15s, border-color .15s;
+    margin-left:auto;
+  }
+  .ext-link:hover{ color:var(--accent); border-color:var(--accent); }
+
   .fork-tag{
     font-family:'JetBrains Mono', monospace;
     font-size:10.5px;
@@ -347,8 +368,8 @@ const USERNAME = "inovdwouw";
 // doesn't expose pin status, so this is set manually — update if you
 // change your pinned repos).
 const PINNED_ORDER = [
-  "Sample-Efficient-Language-Modelling",
-  "Machine-Learning-for-Named-Entity-Recognition-and-Classification"
+  "Chatting-with-a-Baby-LM",
+  "Sample-Efficient-Language-Modelling"
 ];
 
 // The repo that hosts this very page — excluded from the listing.
@@ -437,9 +458,10 @@ function render(){
         <div class="repo-index">[${num}]</div>
         <div class="repo-body">
           <div class="repo-title-row">
-            <a class="repo-title" href="${r.html_url}" target="_blank" rel="noopener">${r.name} <span class="arrow">↗</span></a>
+            <a class="repo-title" href="repo.html?repo=${encodeURIComponent(r.name)}">${r.name} <span class="arrow">→</span></a>
             ${PINNED_ORDER.includes(r.name) ? '<span class="fork-tag pinned-tag">pinned</span>' : ''}
             ${r.fork ? '<span class="fork-tag">fork</span>' : ''}
+            <a class="ext-link" href="${r.html_url}" target="_blank" rel="noopener" title="Open on GitHub" aria-label="Open ${r.name} on GitHub">↗</a>
           </div>
           <p class="repo-desc">${escapeHtml(desc)}</p>
           <div class="stat-strip">
